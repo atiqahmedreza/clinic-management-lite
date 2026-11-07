@@ -1,0 +1,355 @@
+// ---------------------------------------------------------------------------
+// Clinic Management Lite - data model
+//
+// Core domain flow:
+//   Patient -> Appointment -> Consultation (+ Prescription) -> Invoice -> Payment
+//
+// Every monetary column is NUMERIC(12,2) so money is never stored as a float.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ----------------------------- enums ---------------------------------------
+
+enum Role {
+  ADMIN
+  DOCTOR
+  RECEPTIONIST
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  UNKNOWN
+}
+
+/// Lifecycle of a booking. Transitions are enforced in the service layer.
+///   SCHEDULED -> CHECKED_IN -> IN_CONSULTATION -> COMPLETED
+///   SCHEDULED | CHECKED_IN -> CANCELLED | NO_SHOW
+enum AppointmentStatus {
+  SCHEDULED
+  CHECKED_IN
+  IN_CONSULTATION
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  NEW_VISIT
+  FOLLOW_UP
+  EMERGENCY
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  MOBILE_BANKING
+  BANK_TRANSFER
+}
+
+enum ServiceCategory {
+  CONSULTATION
+  LAB_TEST
+  PROCEDURE
+  MEDICATION
+  OTHER
+}
+
+// ----------------------------- staff & auth ---------------------------------
+
+/// A staff member who can sign in. Doctors additionally have a Doctor profile.
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(RECEPTIONIST)
+  phone        String?
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  doctorProfile      Doctor?
+  createdPatients    Patient[]     @relation("PatientCreatedBy")
+  bookedAppointments Appointment[] @relation("AppointmentCreatedBy")
+  issuedInvoices     Invoice[]     @relation("InvoiceCreatedBy")
+  receivedPayments   Payment[]     @relation("PaymentReceivedBy")
+
+  @@index([role])
+  @@map("users")
+}
+
+/// Clinical profile for a user with the DOCTOR role, including the weekly
+/// availability window used to validate appointment booking.
+model Doctor {
+  id                  String  @id @default(cuid())
+  userId              String  @unique
+  specialization      String
+  qualifications      String
+  licenseNumber       String  @unique
+  consultationFee     Decimal @db.Decimal(12, 2)
+  roomNumber          String?
+  bio                 String?
+  /// ISO weekdays the doctor works: 1 = Monday ... 7 = Sunday.
+  availableDays       Int[]   @default([1, 2, 3, 4, 5])
+  /// Clinic-local working window, stored as "HH:mm".
+  startTime           String  @default("09:00")
+  endTime             String  @default("17:00")
+  slotMinutes         Int     @default(30)
+  isAcceptingPatients Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments  Appointment[]
+  consultations Consultation[]
+
+  @@index([specialization])
+  @@map("doctors")
+}
+
+// ----------------------------- patients -------------------------------------
+
+model Patient {
+  id                    String     @id @default(cuid())
+  /// Human-readable medical record number, e.g. "P-2026-0042".
+  mrn                   String     @unique
+  firstName             String
+  lastName              String
+  dateOfBirth           DateTime   @db.Date
+  gender                Gender
+  phone                 String     @unique
+  email                 String?
+  address               String?
+  city                  String?
+  bloodGroup            BloodGroup @default(UNKNOWN)
+  allergies             String?
+  chronicConditions     String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  isActive              Boolean    @default(true)
+  createdById           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdBy     User?          @relation("PatientCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  appointments  Appointment[]
+  consultations Consultation[]
+  invoices      Invoice[]
+
+  @@index([lastName, firstName])
+  @@index([isActive])
+  @@map("patients")
+}
+
+// ----------------------------- appointments ---------------------------------
+
+model Appointment {
+  id                 String            @id @default(cuid())
+  /// Human-readable booking code, e.g. "APT-20261108-0007".
+  code               String            @unique
+  patientId          String
+  doctorId           String
+  scheduledAt        DateTime
+  durationMinutes    Int               @default(30)
+  status             AppointmentStatus @default(SCHEDULED)
+  type               AppointmentType   @default(NEW_VISIT)
+  reason             String
+  notes              String?
+  checkedInAt        DateTime?
+  startedAt          DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdById        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor       Doctor        @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  createdBy    User?         @relation("AppointmentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  consultation Consultation?
+
+  @@index([doctorId, scheduledAt])
+  @@index([patientId, scheduledAt])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("appointments")
+}
+
+// ----------------------------- clinical record ------------------------------
+
+/// The attending record for one visit. Exactly one per appointment.
+model Consultation {
+  id            String @id @default(cuid())
+  appointmentId String @unique
+  patientId     String
+  doctorId      String
+
+  // Vitals (all optional - triage may skip some)
+  temperatureC   Decimal? @db.Decimal(4, 1)
+  pulseBpm       Int?
+  systolicBp     Int?
+  diastolicBp    Int?
+  respiratoryBpm Int?
+  spo2           Int?
+  weightKg       Decimal? @db.Decimal(5, 2)
+  heightCm       Decimal? @db.Decimal(5, 1)
+
+  // Clinical notes
+  symptoms      String
+  examination   String?
+  diagnosis     String
+  treatmentPlan String?
+  advice        String?
+  followUpDate  DateTime? @db.Date
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointment   Appointment    @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patient       Patient        @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor        Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  prescriptions Prescription[]
+  invoice       Invoice?
+
+  @@index([patientId, createdAt])
+  @@index([doctorId, createdAt])
+  @@map("consultations")
+}
+
+model Prescription {
+  id             String  @id @default(cuid())
+  consultationId String
+  medicineName   String
+  dosage         String
+  frequency      String
+  durationDays   Int
+  instructions   String?
+
+  createdAt DateTime @default(now())
+
+  consultation Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  @@index([consultationId])
+  @@map("prescriptions")
+}
+
+// ----------------------------- billing --------------------------------------
+
+/// Price list of billable items a visit can be charged for.
+model Service {
+  id          String          @id @default(cuid())
+  code        String          @unique
+  name        String
+  category    ServiceCategory @default(OTHER)
+  price       Decimal         @db.Decimal(12, 2)
+  description String?
+  isActive    Boolean         @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceItems InvoiceItem[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("services")
+}
+
+model Invoice {
+  id             String        @id @default(cuid())
+  /// Human-readable invoice number, e.g. "INV-2026-0031".
+  number         String        @unique
+  patientId      String
+  consultationId String?       @unique
+  issuedAt       DateTime      @default(now())
+  subtotal       Decimal       @db.Decimal(12, 2)
+  discountAmount Decimal       @default(0) @db.Decimal(12, 2)
+  taxAmount      Decimal       @default(0) @db.Decimal(12, 2)
+  totalAmount    Decimal       @db.Decimal(12, 2)
+  paidAmount     Decimal       @default(0) @db.Decimal(12, 2)
+  status         InvoiceStatus @default(UNPAID)
+  notes          String?
+  createdById    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  consultation Consultation? @relation(fields: [consultationId], references: [id], onDelete: SetNull)
+  createdBy    User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  items        InvoiceItem[]
+  payments     Payment[]
+
+  @@index([patientId, issuedAt])
+  @@index([status])
+  @@index([issuedAt])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  serviceId   String?
+  description String
+  quantity    Int     @default(1)
+  unitPrice   Decimal @db.Decimal(12, 2)
+  lineTotal   Decimal @db.Decimal(12, 2)
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@map("invoice_items")
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  invoiceId    String
+  amount       Decimal       @db.Decimal(12, 2)
+  method       PaymentMethod @default(CASH)
+  reference    String?
+  note         String?
+  paidAt       DateTime      @default(now())
+  receivedById String?
+
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  receivedBy User?   @relation("PaymentReceivedBy", fields: [receivedById], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@index([paidAt])
+  @@map("payments")
+}
