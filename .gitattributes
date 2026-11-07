@@ -1,0 +1,8 @@
+# Normalise line endings so the repo is identical on every OS.
+* text=auto eol=lf
+
+# Binary / generated
+*.png binary
+*.jpg binary
+*.ico binary
+package-lock.json -diff linguist-generated
