@@ -92,17 +92,6 @@
   --viz-area-from: rgba(47, 93, 80, 0.18);
   --viz-area-to: rgba(47, 93, 80, 0);
 
-  /* Queue bar. The four workflow states are an ordered sage ramp that steps
-     monotonically in lightness, so the sequence survives any colour-vision
-     deficiency (and greyscale print). The two off-path states break the ramp
-     deliberately. Each segment is also separated by a gap and named with its
-     count in the legend, so colour is never the only channel. */
-  --queue-scheduled: #cfe0d7;
-  --queue-checked-in: #a3c4b4;
-  --queue-in-consultation: #71a08b;
-  --queue-completed: #2f5d50;
-  --queue-cancelled: #b8643c;
-  --queue-no-show: #a89f94;
 }
 
 [data-theme="dark"] {
@@ -174,12 +163,6 @@
   --viz-area-from: rgba(111, 191, 159, 0.22);
   --viz-area-to: rgba(111, 191, 159, 0);
 
-  --queue-scheduled: #2a4036;
-  --queue-checked-in: #3d6554;
-  --queue-in-consultation: #539a7e;
-  --queue-completed: #8fd3b4;
-  --queue-cancelled: #e39b72;
-  --queue-no-show: #8a8178;
 }
 
 /* ===========================================================================

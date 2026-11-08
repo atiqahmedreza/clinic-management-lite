@@ -150,21 +150,16 @@ export default async function PatientProfilePage({
         <div className="space-y-4">
           <Card>
             <CardBody>
+              {/* The page title above already gives the name and MRN. */}
               <div className="flex items-center gap-3">
                 <Avatar name={name} size="lg" />
-                <div className="min-w-0">
-                  <p className="truncate text-[15px] font-semibold text-ink">
-                    {name}
-                  </p>
-                  <p className="tabular text-sm text-ink-muted">{patient.mrn}</p>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                    <GenderBadge gender={patient.gender} />
-                    {patient.bloodGroup !== "UNKNOWN" ? (
-                      <Badge tone="danger">
-                        {BLOOD_GROUP_META[patient.bloodGroup]}
-                      </Badge>
-                    ) : null}
-                  </div>
+                <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                  <GenderBadge gender={patient.gender} />
+                  {patient.bloodGroup !== "UNKNOWN" ? (
+                    <Badge tone="danger">
+                      {BLOOD_GROUP_META[patient.bloodGroup]}
+                    </Badge>
+                  ) : null}
                 </div>
               </div>
 

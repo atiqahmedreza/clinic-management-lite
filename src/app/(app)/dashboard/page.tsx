@@ -6,16 +6,13 @@ import {
   CalendarCheck2,
   CalendarClock,
   ClipboardList,
-  Clock3,
   ReceiptText,
   Stethoscope,
   Users,
 } from "lucide-react";
-import type { AppointmentStatus } from "@prisma/client";
 
 import { requireSession } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/services/dashboard.service";
-import { APPOINTMENT_STATUS_META } from "@/lib/constants";
 import {
   describeAge,
   formatCurrency,
@@ -35,9 +32,7 @@ import {
 import { EmptyState } from "@/components/ui/states";
 import { buttonClasses } from "@/components/ui/button";
 import {
-  RankingBars,
   RevenueTrendChart,
-  StatusSegmentedBar,
   VisitsBarChart,
 } from "@/components/ui/charts";
 import { AppointmentStatusActions } from "@/components/appointments/status-actions";
@@ -47,14 +42,6 @@ export const metadata: Metadata = { title: "Dashboard" };
 // Figures must reflect what was just saved, so this page is never cached.
 export const dynamic = "force-dynamic";
 
-const STATUS_COLORS: Record<AppointmentStatus, string> = {
-  SCHEDULED: "var(--queue-scheduled)",
-  CHECKED_IN: "var(--queue-checked-in)",
-  IN_CONSULTATION: "var(--queue-in-consultation)",
-  COMPLETED: "var(--queue-completed)",
-  CANCELLED: "var(--queue-cancelled)",
-  NO_SHOW: "var(--queue-no-show)",
-};
 
 export default async function DashboardPage() {
   const session = await requireSession();
@@ -77,22 +64,13 @@ export default async function DashboardPage() {
         title={`Good ${partOfDay()}, ${firstName}`}
         description={formatDateLong(data.generatedAt)}
         actions={
-          <>
-            <Link
-              href="/patients/new"
-              className={buttonClasses("secondary", "md")}
-            >
-              <Users className="h-4 w-4" aria-hidden />
-              Register patient
-            </Link>
-            <Link
-              href="/appointments/new"
-              className={buttonClasses("primary", "md")}
-            >
-              <CalendarCheck2 className="h-4 w-4" aria-hidden />
-              Book visit
-            </Link>
-          </>
+          <Link
+            href="/patients/new"
+            className={buttonClasses("secondary", "md")}
+          >
+            <Users className="h-4 w-4" aria-hidden />
+            Register patient
+          </Link>
         }
       />
 
@@ -119,13 +97,7 @@ export default async function DashboardPage() {
         <StatCard
           label="Collected today"
           value={formatCurrency(kpi.revenueToday)}
-          change={kpi.revenueChange}
-          changeLabel={`${formatCurrency(kpi.revenueThisMonth)} this month`}
-          sublabel={
-            kpi.revenueChange === null
-              ? `${kpi.paymentsTodayCount} payment${kpi.paymentsTodayCount === 1 ? "" : "s"} recorded`
-              : `vs last month · ${formatCurrency(kpi.revenueThisMonth)} MTD`
-          }
+          sublabel={`${kpi.paymentsTodayCount} payment${kpi.paymentsTodayCount === 1 ? "" : "s"} recorded`}
           icon={<Wallet className="h-4 w-4" aria-hidden />}
           href={canBill ? "/invoices" : undefined}
         />
@@ -140,8 +112,8 @@ export default async function DashboardPage() {
       </section>
 
       {/* ---------------- charts ---------------- */}
-      <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
+      <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <Card>
           <CardHeader
             title="Payments collected"
             description="Last 14 days, from recorded payments"
@@ -161,20 +133,12 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader
-            title="Today's queue status"
-            description={`${kpi.appointmentsToday} booked`}
-            icon={<Clock3 className="h-4 w-4" aria-hidden />}
+            title="Visits per day"
+            description="Last 14 days, by outcome"
+            icon={<CalendarCheck2 className="h-4 w-4" aria-hidden />}
           />
           <CardBody>
-            <StatusSegmentedBar
-              slices={data.statusBreakdown.map((slice) => ({
-                label:
-                  APPOINTMENT_STATUS_META[slice.status as AppointmentStatus]
-                    .label,
-                value: slice.count,
-                color: STATUS_COLORS[slice.status as AppointmentStatus],
-              }))}
-            />
+            <VisitsBarChart data={data.trend} />
           </CardBody>
         </Card>
       </section>
@@ -362,47 +326,6 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      {/* ---------------- secondary charts ---------------- */}
-      <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
-          <CardHeader
-            title="Visits per day"
-            description="Last 14 days, by outcome"
-            icon={<CalendarCheck2 className="h-4 w-4" aria-hidden />}
-          />
-          <CardBody>
-            <VisitsBarChart data={data.trend} />
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader
-            title="Busiest doctors"
-            description="Consultations this month"
-            icon={<Stethoscope className="h-4 w-4" aria-hidden />}
-          />
-          <CardBody>
-            {data.topDoctors.length === 0 ? (
-              <p className="py-6 text-center text-sm text-ink-muted">
-                No consultations recorded this month yet.
-              </p>
-            ) : (
-              <RankingBars
-                items={data.topDoctors.map((doctor) => ({
-                  label: doctor.name,
-                  sublabel: doctor.specialization,
-                  value: doctor.visits,
-                }))}
-              />
-            )}
-          </CardBody>
-        </Card>
-      </section>
-
-      <p className="mt-6 text-center text-xs text-ink-muted">
-        Every figure on this page is aggregated from stored records at page
-        load — nothing here is hard-coded.
-      </p>
     </>
   );
 }

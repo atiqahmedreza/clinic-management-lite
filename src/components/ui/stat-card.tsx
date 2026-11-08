@@ -40,7 +40,7 @@ export function StatCard({
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="eyebrow">{label}</p>
+        <p className="text-sm font-medium text-ink-secondary">{label}</p>
         {icon ? (
           <span
             className={cn(

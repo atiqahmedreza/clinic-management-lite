@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { formatCurrency, formatCurrencyCompact, formatNumber } from "@/lib/utils";
+import { formatCurrency, formatCurrencyCompact } from "@/lib/utils";
 import {
   barPath,
   ChartDataTable,
@@ -143,9 +143,10 @@ export function RevenueTrendChart({
           />
         ) : null}
 
-        {/* x labels - every third tick keeps them from colliding */}
+        {/* x labels - every third tick, counted back from the newest day,
+            so the latest date is always labelled and none collide */}
         {data.map((item, index) =>
-          index % 3 === 0 || index === data.length - 1 ? (
+          (data.length - 1 - index) % 3 === 0 ? (
             <text
               key={item.label}
               x={PAD.left + index * stepX}
@@ -353,7 +354,7 @@ export function VisitsBarChart({
           })}
 
           {data.map((item, index) =>
-            index % 3 === 0 || index === data.length - 1 ? (
+            (data.length - 1 - index) % 3 === 0 ? (
               <text
                 key={item.label}
                 x={PAD.left + index * slot + slot / 2}
@@ -408,109 +409,3 @@ export function VisitsBarChart({
    Today's status - part-to-whole segmented bar with a counted legend
    (the legend doubles as the direct labels the contrast relief rule requires)
    =========================================================================== */
-
-export type StatusSlice = {
-  label: string;
-  value: number;
-  color: string;
-};
-
-export function StatusSegmentedBar({ slices }: { slices: StatusSlice[] }) {
-  const visible = slices.filter((slice) => slice.value > 0);
-  const total = visible.reduce((sum, slice) => sum + slice.value, 0);
-
-  if (total === 0) {
-    return (
-      <p className="py-6 text-center text-sm text-ink-muted">
-        No appointments booked for today yet.
-      </p>
-    );
-  }
-
-  return (
-    <div className="space-y-3.5">
-      <div
-        className="flex h-3 w-full gap-[2px] overflow-hidden rounded-full"
-        role="img"
-        aria-label={visible
-          .map((slice) => `${slice.label}: ${slice.value}`)
-          .join(", ")}
-      >
-        {visible.map((slice) => (
-          <span
-            key={slice.label}
-            className="h-full first:rounded-l-full last:rounded-r-full"
-            style={{
-              width: `${(slice.value / total) * 100}%`,
-              backgroundColor: slice.color,
-            }}
-          />
-        ))}
-      </div>
-
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
-        {slices.map((slice) => (
-          <li
-            key={slice.label}
-            className="flex items-center justify-between gap-2 text-sm"
-          >
-            <span className="flex min-w-0 items-center gap-2">
-              <span
-                className="h-2.5 w-2.5 shrink-0 rounded-[3px]"
-                style={{ backgroundColor: slice.color }}
-                aria-hidden
-              />
-              <span className="truncate text-ink-secondary">{slice.label}</span>
-            </span>
-            <span className="tabular font-semibold text-ink">
-              {formatNumber(slice.value)}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/* ===========================================================================
-   Horizontal ranking bars - "busiest doctors this month"
-   =========================================================================== */
-
-export function RankingBars({
-  items,
-}: {
-  items: { label: string; sublabel?: string; value: number }[];
-}) {
-  const max = Math.max(...items.map((item) => item.value), 1);
-
-  return (
-    <ul className="space-y-3">
-      {items.map((item) => (
-        <li key={item.label} className="space-y-1.5">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="min-w-0 truncate text-sm font-medium text-ink">
-              {item.label}
-              {item.sublabel ? (
-                <span className="ml-1.5 text-xs font-normal text-ink-muted">
-                  {item.sublabel}
-                </span>
-              ) : null}
-            </span>
-            <span className="tabular shrink-0 text-sm font-semibold text-ink">
-              {item.value}
-            </span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${Math.max((item.value / max) * 100, 4)}%`,
-                backgroundColor: "var(--viz-1)",
-              }}
-            />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
