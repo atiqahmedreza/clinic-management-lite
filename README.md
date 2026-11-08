@@ -7,6 +7,10 @@ A small-clinic management system built around **one real business process**:
 Nothing on the dashboard is hard-coded. Every number is aggregated from stored
 records at page load.
 
+**Live demo: <https://clinic-management-lite.vercel.app>** — sign in with any of
+the [demo accounts](#demo-credentials) (password `Passw0rd!`). The one-click fill
+buttons on the login screen save you typing.
+
 ---
 
 ## Contents
@@ -373,7 +377,11 @@ The login screen has a one-click fill button for each account.
 
 ## Deployment
 
-The app deploys as a single Next.js service. Vercel is the shortest path.
+The app deploys as a single Next.js service, and is running at
+<https://clinic-management-lite.vercel.app> against a Neon Postgres database.
+`GET /api/health` on that host reports the live database latency.
+
+To deploy your own copy, Vercel is the shortest path.
 
 1. Push the repository to GitHub.
 2. Create a Postgres database (Neon, Supabase, Railway, or Vercel Postgres).
