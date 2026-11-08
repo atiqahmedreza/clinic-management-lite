@@ -398,8 +398,6 @@ placeholders, is committed.
 
 ## Screenshots
 
-Add 3–5 images to `docs/screenshots/` and they will render here.
-
 | | |
 |---|---|
 | ![Dashboard](docs/screenshots/01-dashboard.png) | ![Booking](docs/screenshots/02-booking.png) |
