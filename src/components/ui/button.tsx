@@ -12,18 +12,19 @@ export type ButtonVariant =
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors select-none " +
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)] " +
+  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] font-medium " +
+  "transition-colors duration-150 select-none " +
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] " +
   "disabled:pointer-events-none disabled:opacity-55";
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--brand)] text-white shadow-sm hover:bg-[var(--brand-hover)] dark:text-[var(--ink-inverse)]",
+    "bg-[var(--brand)] text-[var(--ink-inverse)] hover:bg-[var(--brand-hover)]",
   secondary:
     "border border-line-strong bg-surface text-ink hover:bg-surface-muted",
   ghost: "text-ink-secondary hover:bg-surface-muted hover:text-ink",
   danger:
-    "bg-[var(--danger)] text-white hover:brightness-95 dark:text-[var(--ink-inverse)]",
+    "bg-[var(--danger)] text-[var(--ink-inverse)] hover:brightness-95",
   subtle: "bg-brand-soft text-brand-ink hover:brightness-[0.97]",
 };
 

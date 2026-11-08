@@ -38,7 +38,7 @@ export function Table({
 
 export function THead({ children }: { children: React.ReactNode }) {
   return (
-    <thead className="border-b border-line bg-surface-muted/70">
+    <thead className="border-b border-line bg-surface-muted">
       {children}
     </thead>
   );
@@ -61,7 +61,7 @@ export function TH({
     <th
       scope="col"
       className={cn(
-        "whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-muted",
+        "whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.06em] text-ink-muted",
         align === "right" && "text-right",
         align === "center" && "text-center",
         align === "left" && "text-left",
@@ -81,7 +81,12 @@ export function TR({
   className?: string;
 }) {
   return (
-    <tr className={cn("transition-colors hover:bg-surface-muted/60", className)}>
+    <tr
+      className={cn(
+        "transition-colors duration-150 hover:bg-surface-muted/70",
+        className,
+      )}
+    >
       {children}
     </tr>
   );
@@ -102,7 +107,7 @@ export function TD({
     <td
       colSpan={colSpan}
       className={cn(
-        "px-4 py-3 align-middle text-ink",
+        "px-4 py-3.5 align-middle text-ink",
         align === "right" && "text-right",
         align === "center" && "text-center",
         className,

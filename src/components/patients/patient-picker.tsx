@@ -121,7 +121,7 @@ export function PatientPicker({
             setSelected(null);
             setOpen(true);
           }}
-          className="shrink-0 rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface hover:text-ink"
+          className="shrink-0 rounded-[var(--radius-control)] p-1.5 text-ink-muted transition-colors hover:bg-surface hover:text-ink"
           aria-label="Choose a different patient"
         >
           <X className="h-4 w-4" aria-hidden />
@@ -168,7 +168,7 @@ export function PatientPicker({
         <div
           id={listId}
           role="listbox"
-          className="absolute z-30 mt-1.5 max-h-72 w-full overflow-y-auto rounded-xl border border-line bg-surface py-1 shadow-[var(--shadow-pop)]"
+          className="absolute z-30 mt-1.5 max-h-72 w-full overflow-y-auto rounded-[var(--radius-card)] border border-line bg-surface py-1 shadow-[var(--shadow-pop)]"
         >
           {results.length === 0 && !loading ? (
             <div className="px-3 py-4 text-center">

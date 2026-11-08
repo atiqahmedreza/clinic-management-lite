@@ -215,7 +215,7 @@ export function ClearFilters({ keys }: { keys: string[] }) {
       onClick={() =>
         update(Object.fromEntries(keys.map((key) => [key, undefined])))
       }
-      className="inline-flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-ink-secondary transition-colors hover:bg-surface-muted hover:text-ink"
+      className="inline-flex h-10 items-center gap-1.5 rounded-[var(--radius-control)] px-3 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-muted hover:text-ink"
     >
       <X className="h-3.5 w-3.5" aria-hidden />
       Clear filters
@@ -225,7 +225,7 @@ export function ClearFilters({ keys }: { keys: string[] }) {
 
 export function FilterBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-2 border-b border-line px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center">
+    <div className="flex flex-col gap-2 border-b border-line px-5 py-4 sm:flex-row sm:flex-wrap sm:items-center">
       {children}
     </div>
   );

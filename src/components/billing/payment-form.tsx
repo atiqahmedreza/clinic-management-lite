@@ -64,7 +64,7 @@ export function PaymentForm({
     return (
       <Card>
         <CardBody className="flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-success-soft text-success-ink">
             <BadgeCheck className="h-4 w-4" aria-hidden />
           </span>
           <div>

@@ -22,17 +22,12 @@ import type {
 } from "@prisma/client";
 
 const tones: Record<Tone, string> = {
-  neutral:
-    "bg-slate-100 text-slate-700 ring-slate-200 dark:bg-slate-500/15 dark:text-slate-300 dark:ring-slate-400/20",
-  info: "bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:ring-sky-400/20",
-  success:
-    "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-400/20",
-  warning:
-    "bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/20",
-  danger:
-    "bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:ring-rose-400/20",
-  accent:
-    "bg-teal-50 text-teal-700 ring-teal-200 dark:bg-teal-500/15 dark:text-teal-300 dark:ring-teal-400/20",
+  neutral: "bg-surface-muted text-ink-secondary ring-line-strong",
+  info: "bg-info-soft text-info-ink ring-info/25",
+  success: "bg-success-soft text-success-ink ring-success/25",
+  warning: "bg-warning-soft text-warning-ink ring-warning/30",
+  danger: "bg-danger-soft text-danger-ink ring-danger/25",
+  accent: "bg-accent-soft text-accent-ink ring-accent/25",
 };
 
 export function Badge({

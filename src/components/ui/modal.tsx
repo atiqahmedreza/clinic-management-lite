@@ -68,7 +68,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-[70] flex items-end justify-center p-0 sm:items-center sm:p-4">
       <div
-        className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-[var(--overlay)]"
         onClick={onClose}
         aria-hidden
       />
@@ -78,7 +78,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={titleId}
         className={cn(
-          "relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl border border-line bg-surface shadow-[var(--shadow-pop)] sm:rounded-2xl",
+          "relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-pop)] sm:rounded-[var(--radius-card)]",
           widths[size],
         )}
       >
@@ -98,7 +98,7 @@ export function Modal({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="-mr-1.5 -mt-1 rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-muted hover:text-ink"
+            className="-mr-1.5 -mt-1 rounded-[var(--radius-control)] p-1.5 text-ink-muted transition-colors duration-150 hover:bg-surface-muted hover:text-ink"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>

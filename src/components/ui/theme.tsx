@@ -94,7 +94,7 @@ export function ThemeToggle({ className }: { className?: string }) {
             aria-pressed={active}
             title={`${option.label} theme`}
             className={cn(
-              "inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors",
+              "inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-control)] transition-colors",
               active
                 ? "bg-surface text-ink shadow-sm"
                 : "text-ink-muted hover:text-ink",

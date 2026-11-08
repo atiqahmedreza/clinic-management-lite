@@ -30,22 +30,22 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4",
+        "flex flex-wrap items-start justify-between gap-3 border-b border-line px-6 py-5",
         className,
       )}
     >
       <div className="flex min-w-0 items-start gap-3">
         {icon ? (
-          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand-ink">
+          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-ink">
             {icon}
           </span>
         ) : null}
         <div className="min-w-0">
-          <h2 className="text-[15px] font-semibold tracking-tight text-ink">
+          <h2 className="display text-[1.125rem] text-ink">
             {title}
           </h2>
           {description ? (
-            <p className="mt-0.5 text-sm text-ink-muted">{description}</p>
+            <p className="mt-1 text-sm text-ink-muted">{description}</p>
           ) : null}
         </div>
       </div>
@@ -60,7 +60,7 @@ export function CardBody({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("px-5 py-4", className)} {...props}>
+    <div className={cn("px-6 py-5", className)} {...props}>
       {children}
     </div>
   );
@@ -74,7 +74,7 @@ export function CardFooter({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-end gap-2 border-t border-line bg-surface-muted/60 px-5 py-3",
+        "flex flex-wrap items-center justify-end gap-2 border-t border-line bg-surface-muted/60 px-6 py-4",
         className,
       )}
       {...props}
@@ -96,7 +96,7 @@ export function DataRow({
 }) {
   return (
     <div className={cn("flex flex-col gap-0.5 py-2", className)}>
-      <dt className="text-xs font-medium uppercase tracking-wide text-ink-muted">
+      <dt className="eyebrow">
         {label}
       </dt>
       <dd className="text-sm text-ink">{value ?? "—"}</dd>
@@ -113,10 +113,7 @@ export function SectionTitle({
 }) {
   return (
     <h3
-      className={cn(
-        "text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted",
-        className,
-      )}
+      className={cn("eyebrow", className)}
     >
       {children}
     </h3>

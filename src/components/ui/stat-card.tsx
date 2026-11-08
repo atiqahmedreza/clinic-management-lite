@@ -29,22 +29,22 @@ export function StatCard({
   href?: string;
   accent?: "brand" | "amber" | "rose" | "sky";
 }) {
+  /* The four call-sites keep their names; the tints are warm now. */
   const accents = {
     brand: "bg-brand-soft text-brand-ink",
-    amber:
-      "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
-    rose: "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
-    sky: "bg-sky-50 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300",
+    amber: "bg-warning-soft text-warning-ink",
+    rose: "bg-danger-soft text-danger-ink",
+    sky: "bg-info-soft text-info-ink",
   } as const;
 
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-medium text-ink-secondary">{label}</p>
+        <p className="eyebrow">{label}</p>
         {icon ? (
           <span
             className={cn(
-              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
               accents[accent],
             )}
           >
@@ -53,7 +53,7 @@ export function StatCard({
         ) : null}
       </div>
 
-      <p className="tabular mt-2.5 text-2xl font-semibold tracking-tight text-ink">
+      <p className="display tabular mt-2.5 text-[1.75rem] text-ink">
         {value}
       </p>
 
@@ -94,8 +94,8 @@ function DeltaChip({ change }: { change: number }) {
       className={cn(
         "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-medium",
         positive
-          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-          : "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+          ? "bg-success-soft text-success-ink"
+          : "bg-danger-soft text-danger-ink",
       )}
     >
       <Icon className="h-3 w-3" aria-hidden />

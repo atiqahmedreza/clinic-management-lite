@@ -93,7 +93,7 @@ export function PrescriptionEditor({
                   type="button"
                   onClick={() => remove(row.key)}
                   aria-label={`Remove medicine ${index + 1}`}
-                  className="rounded-md p-1 text-ink-muted transition-colors hover:bg-surface hover:text-[var(--danger)]"
+                  className="rounded-[var(--radius-control)] p-1 text-ink-muted transition-colors hover:bg-surface hover:text-[var(--danger)]"
                 >
                   <Trash2 className="h-3.5 w-3.5" aria-hidden />
                 </button>

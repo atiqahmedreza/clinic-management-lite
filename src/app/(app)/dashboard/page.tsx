@@ -48,12 +48,12 @@ export const metadata: Metadata = { title: "Dashboard" };
 export const dynamic = "force-dynamic";
 
 const STATUS_COLORS: Record<AppointmentStatus, string> = {
-  SCHEDULED: "var(--viz-1)",
-  CHECKED_IN: "var(--viz-4)",
-  IN_CONSULTATION: "var(--viz-2)",
-  COMPLETED: "var(--viz-3)",
-  CANCELLED: "var(--viz-5)",
-  NO_SHOW: "var(--viz-6)",
+  SCHEDULED: "var(--queue-scheduled)",
+  CHECKED_IN: "var(--queue-checked-in)",
+  IN_CONSULTATION: "var(--queue-in-consultation)",
+  COMPLETED: "var(--queue-completed)",
+  CANCELLED: "var(--queue-cancelled)",
+  NO_SHOW: "var(--queue-no-show)",
 };
 
 export default async function DashboardPage() {

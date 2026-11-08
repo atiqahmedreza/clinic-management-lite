@@ -9,97 +9,177 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* ===========================================================================
-   Semantic tokens
+   Semantic tokens — warm paper, sage green, terracotta.
+   Every colour in the app comes from here. Nothing hardcodes a hex outside
+   this block; semantic colours carry a separate `-ink` step for text, because
+   the mid-tone terracotta and ochre do not clear 4.5:1 as label colours.
    =========================================================================== */
 
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
-  --canvas: #f4f6f8;
+  --canvas: #faf7f2;
   --surface: #ffffff;
-  --surface-muted: #f7f9fb;
+  --surface-muted: #f3eee6;
   --surface-raised: #ffffff;
 
-  --border: #e3e8ec;
-  --border-strong: #cfd8e0;
+  --border: #e6dfd3;
+  --border-strong: #d5cbba;
 
-  --ink: #0f1a24;
-  --ink-secondary: #4a5b6a;
-  --ink-muted: #76858f;
-  --ink-inverse: #ffffff;
+  --ink: #221e1a;
+  --ink-secondary: #4a433c;
+  --ink-muted: #6b635b;
+  --ink-inverse: #faf7f2;
 
-  --brand: #0d9488;
-  --brand-hover: #0f766e;
-  --brand-soft: #e6fffb;
-  --brand-ink: #0f766e;
-  --brand-ring: rgba(13, 148, 136, 0.35);
+  --brand: #2f5d50;
+  --brand-hover: #244a40;
+  --brand-soft: #e3eee8;
+  --brand-ink: #2f5d50;
+  --brand-ring: rgba(184, 100, 60, 0.4);
 
-  --danger: #d03b3b;
-  --danger-soft: #fdecec;
+  --accent: #b8643c;
+  --accent-ink: #9c5533;
+  --accent-soft: #f6e5da;
 
-  --shadow-card: 0 1px 2px rgba(15, 26, 36, 0.05),
-    0 1px 3px rgba(15, 26, 36, 0.04);
-  --shadow-pop: 0 10px 30px -12px rgba(15, 26, 36, 0.28),
-    0 2px 8px rgba(15, 26, 36, 0.06);
+  --success: #2f6b4f;
+  --success-ink: #2f6b4f;
+  --success-soft: #e4efe6;
 
-  /* Data-visualisation palette - validated for this surface.
-     node scripts/validate_palette.js "<slots>" --mode light --surface "#ffffff" */
-  --viz-1: #2a78d6;
-  --viz-2: #eb6834;
-  --viz-3: #1baf7a;
-  --viz-4: #eda100;
-  --viz-5: #e87ba4;
-  --viz-6: #008300;
-  --viz-grid: #e8ecef;
-  --viz-axis: #c3cbd2;
-  --viz-label: #76858f;
-  --viz-area-from: rgba(42, 120, 214, 0.22);
-  --viz-area-to: rgba(42, 120, 214, 0);
+  --warning: #b7791f;
+  --warning-ink: #946219;
+  --warning-soft: #fbefd6;
+
+  --danger: #b3402f;
+  --danger-ink: #b3402f;
+  --danger-soft: #f8e3df;
+
+  /* "info" is a quiet sage, never blue. */
+  --info: #4f7667;
+  --info-ink: #3f6354;
+  --info-soft: #e8efea;
+
+  --focus: #b8643c;
+  --overlay: rgba(20, 17, 15, 0.45);
+
+  --shadow-card: 0 1px 2px rgba(34, 30, 26, 0.06);
+  --shadow-pop: 0 2px 8px rgba(34, 30, 26, 0.1),
+    0 1px 2px rgba(34, 30, 26, 0.06);
+
+  /* Sidebar reads as deep green with cream text in both themes. */
+  --sidebar: #1f3f36;
+  --sidebar-ink: #f1eadf;
+  --sidebar-muted: #a9bdb3;
+  --sidebar-active: #2b5649;
+  --sidebar-border: rgba(241, 234, 223, 0.12);
+
+  /* Data-visualisation palette.
+     Slots 1-3 are the chart series and are validated for colour-vision
+     deficiency (min ΔE2000 20.4 across normal, protan, deutan and tritan):
+       node scripts/validate_palette.js "#2f5d50,#a9872b,#7a9183" \
+         --surface "#ffffff" --min-de 18
+     Slots 4-6 extend the ramp for the six-state queue bar, which also
+     carries a text label and count per segment. */
+  --viz-1: #2f5d50;
+  --viz-2: #a9872b;
+  --viz-3: #7a9183;
+  --viz-4: #b7791f;
+  --viz-5: #b3402f;
+  --viz-6: #8a8178;
+  --viz-grid: #ede6da;
+  --viz-axis: #d5cbba;
+  --viz-label: #6b635b;
+  --viz-area-from: rgba(47, 93, 80, 0.18);
+  --viz-area-to: rgba(47, 93, 80, 0);
+
+  /* Queue bar. The four workflow states are an ordered sage ramp that steps
+     monotonically in lightness, so the sequence survives any colour-vision
+     deficiency (and greyscale print). The two off-path states break the ramp
+     deliberately. Each segment is also separated by a gap and named with its
+     count in the legend, so colour is never the only channel. */
+  --queue-scheduled: #cfe0d7;
+  --queue-checked-in: #a3c4b4;
+  --queue-in-consultation: #71a08b;
+  --queue-completed: #2f5d50;
+  --queue-cancelled: #b8643c;
+  --queue-no-show: #a89f94;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --canvas: #0a0f14;
-  --surface: #121820;
-  --surface-muted: #19212b;
-  --surface-raised: #182029;
+  --canvas: #14110f;
+  --surface: #1e1a17;
+  --surface-muted: #1a1613;
+  --surface-raised: #221d19;
 
-  --border: #253040;
-  --border-strong: #35435a;
+  --border: #342e28;
+  --border-strong: #463e36;
 
-  --ink: #e8eef4;
-  --ink-secondary: #a7b6c4;
-  --ink-muted: #7d8c9a;
-  --ink-inverse: #06121a;
+  --ink: #f2ece4;
+  --ink-secondary: #cfc6ba;
+  --ink-muted: #a89f94;
+  --ink-inverse: #14110f;
 
-  --brand: #2dd4bf;
-  --brand-hover: #5eead4;
-  --brand-soft: rgba(45, 212, 191, 0.12);
-  --brand-ink: #5eead4;
-  --brand-ring: rgba(45, 212, 191, 0.35);
+  --brand: #6fbf9f;
+  --brand-hover: #8cd0b4;
+  --brand-soft: #1f332b;
+  --brand-ink: #6fbf9f;
+  --brand-ring: rgba(227, 155, 114, 0.45);
 
-  --danger: #f08b8b;
-  --danger-soft: rgba(208, 59, 59, 0.16);
+  --accent: #e39b72;
+  --accent-ink: #e39b72;
+  --accent-soft: #3a2a20;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-pop: 0 14px 34px -14px rgba(0, 0, 0, 0.75),
-    0 2px 10px rgba(0, 0, 0, 0.4);
+  --success: #7fc79f;
+  --success-ink: #7fc79f;
+  --success-soft: #1d3026;
 
-  /* Dark steps of the same hues - selected for the dark surface, validated:
-     node scripts/validate_palette.js "<slots>" --mode dark --surface "#121820" */
-  --viz-1: #3987e5;
-  --viz-2: #d95926;
-  --viz-3: #199e70;
-  --viz-4: #c98500;
-  --viz-5: #d55181;
-  --viz-6: #008300;
-  --viz-grid: #222c38;
-  --viz-axis: #33404f;
-  --viz-label: #7d8c9a;
-  --viz-area-from: rgba(57, 135, 229, 0.3);
-  --viz-area-to: rgba(57, 135, 229, 0);
+  --warning: #e0b457;
+  --warning-ink: #e0b457;
+  --warning-soft: #352a17;
+
+  --danger: #e8897a;
+  --danger-ink: #e8897a;
+  --danger-soft: #3a211d;
+
+  --info: #8fb3a2;
+  --info-ink: #8fb3a2;
+  --info-soft: #22302a;
+
+  --focus: #e39b72;
+  --overlay: rgba(10, 8, 7, 0.6);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 2px 10px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  --sidebar: #19302a;
+  --sidebar-ink: #ecE4d9;
+  --sidebar-muted: #9bb0a6;
+  --sidebar-active: #244439;
+  --sidebar-border: rgba(236, 228, 217, 0.1);
+
+  /* Dark steps, validated on the dark surface (min ΔE2000 21.6):
+       node scripts/validate_palette.js "#6fbf9f,#a9872b,#5c7265" \
+         --surface "#1e1a17" --mode dark --min-de 18 */
+  --viz-1: #6fbf9f;
+  --viz-2: #a9872b;
+  --viz-3: #5c7265;
+  --viz-4: #e0b457;
+  --viz-5: #e8897a;
+  --viz-6: #a89f94;
+  --viz-grid: #2a241f;
+  --viz-axis: #463e36;
+  --viz-label: #a89f94;
+  --viz-area-from: rgba(111, 191, 159, 0.22);
+  --viz-area-to: rgba(111, 191, 159, 0);
+
+  --queue-scheduled: #2a4036;
+  --queue-checked-in: #3d6554;
+  --queue-in-consultation: #539a7e;
+  --queue-completed: #8fd3b4;
+  --queue-cancelled: #e39b72;
+  --queue-no-show: #8a8178;
 }
 
 /* ===========================================================================
@@ -126,13 +206,39 @@
   --color-brand-soft: var(--brand-soft);
   --color-brand-ink: var(--brand-ink);
 
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
+
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-ink: var(--warning-ink);
+
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
 
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
 
-  --radius-card: 0.875rem;
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-ink: var(--sidebar-ink);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-line: var(--sidebar-border);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, "Times New Roman",
+    serif;
+
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
 }
 
 /* ===========================================================================
@@ -152,12 +258,25 @@
     background-color: var(--canvas);
     color: var(--ink);
     font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Headings are the serif voice of the app. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
   :focus-visible {
-    outline: 2px solid var(--brand);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -214,6 +333,32 @@
   font-variant-numeric: tabular-nums;
 }
 
+/** Serif display face, for titles and figures. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/** Small uppercase label above a value or section. */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/** Short terracotta rule used under page titles. */
+@utility title-rule {
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  border-radius: 999px;
+  background-color: var(--accent);
+}
+
 /* Used by skeletons */
 @keyframes shimmer {
   100% {
@@ -227,6 +372,8 @@
   background-color: var(--surface-muted);
 }
 
+/* The only gradient in the app: a moving highlight that reads as "loading".
+   Warm, low contrast, and removed entirely under reduced motion. */
 .skeleton::after {
   content: "";
   position: absolute;
@@ -235,7 +382,7 @@
   background-image: linear-gradient(
     90deg,
     transparent,
-    rgba(127, 150, 170, 0.14),
+    rgba(155, 140, 120, 0.16),
     transparent
   );
   animation: shimmer 1.6s infinite;

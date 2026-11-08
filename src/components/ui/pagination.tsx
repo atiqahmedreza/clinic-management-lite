@@ -95,9 +95,9 @@ function PageLink({
   children: React.ReactNode;
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const className = cn(
-    "inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-sm font-medium transition-colors",
+    "inline-flex h-8 min-w-8 items-center justify-center rounded-[var(--radius-control)] px-2 text-sm font-medium tabular transition-colors duration-150",
     active
-      ? "bg-[var(--brand)] text-white dark:text-[var(--ink-inverse)]"
+      ? "bg-[var(--brand)] text-[var(--ink-inverse)]"
       : "text-ink-secondary hover:bg-surface-muted",
     disabled && "pointer-events-none opacity-40",
   );

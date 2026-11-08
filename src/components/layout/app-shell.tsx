@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
-  HeartPulse,
+  Leaf,
   LogOut,
   Menu,
   Plus,
@@ -53,7 +53,7 @@ export function AppShell({
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[264px_1fr]">
       {/* ---------------- desktop sidebar ---------------- */}
-      <aside className="sticky top-0 hidden h-screen flex-col border-r border-line bg-surface lg:flex">
+      <aside className="sticky top-0 hidden h-screen flex-col bg-sidebar lg:flex">
         <SidebarContent role={user.role} pathname={pathname} />
       </aside>
 
@@ -61,12 +61,12 @@ export function AppShell({
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-slate-900/50"
+            className="absolute inset-0 bg-[var(--overlay)]"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
           <aside
-            className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col border-r border-line bg-surface shadow-[var(--shadow-pop)]"
+            className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-sidebar shadow-[var(--shadow-pop)]"
             role="dialog"
             aria-modal="true"
             aria-label="Main navigation"
@@ -75,7 +75,7 @@ export function AppShell({
               type="button"
               onClick={() => setMobileOpen(false)}
               aria-label="Close navigation"
-              className="absolute right-3 top-3.5 rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-muted hover:text-ink"
+              className="absolute right-3 top-3.5 rounded-[var(--radius-control)] p-1.5 text-sidebar-muted transition-colors duration-150 hover:bg-sidebar-active hover:text-sidebar-ink"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>
@@ -86,7 +86,7 @@ export function AppShell({
 
       {/* ---------------- main column ---------------- */}
       <div className="flex min-w-0 flex-col">
-        <header className="app-header sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-line bg-surface/90 px-4 backdrop-blur-md sm:px-6">
+        <header className="app-header sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-line bg-canvas px-4 sm:px-6">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -101,10 +101,10 @@ export function AppShell({
             className="flex items-center gap-2 lg:hidden"
             aria-label={APP_NAME}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand)] text-white dark:text-[var(--ink-inverse)]">
-              <HeartPulse className="h-4 w-4" aria-hidden />
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-soft text-brand-ink">
+              <Leaf className="h-4 w-4" aria-hidden />
             </span>
-            <span className="truncate text-sm font-semibold text-ink">
+            <span className="display truncate text-[15px] text-ink">
               {CLINIC.name}
             </span>
           </Link>
@@ -149,15 +149,15 @@ function SidebarContent({
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-line px-5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand)] text-white dark:text-[var(--ink-inverse)]">
-          <HeartPulse className="h-[18px] w-[18px]" aria-hidden />
+      <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-sidebar-line px-5">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-sidebar-line text-sidebar-ink">
+          <Leaf className="h-[18px] w-[18px]" aria-hidden />
         </span>
         <span className="min-w-0">
-          <span className="block truncate text-sm font-semibold leading-tight text-ink">
+          <span className="display block truncate text-[15px] leading-tight text-sidebar-ink">
             {CLINIC.name}
           </span>
-          <span className="block truncate text-xs text-ink-muted">
+          <span className="block truncate text-xs text-sidebar-muted">
             {APP_NAME}
           </span>
         </span>
@@ -169,7 +169,7 @@ function SidebarContent({
       >
         {sections.map((section) => (
           <div key={section.title} className="mb-5 last:mb-0">
-            <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+            <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-sidebar-muted">
               {section.title}
             </p>
             <ul className="space-y-0.5">
@@ -183,16 +183,18 @@ function SidebarContent({
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
+                        "group relative flex items-center gap-2.5 rounded-lg py-2 pl-3.5 pr-2.5 text-sm font-medium transition-colors duration-150",
                         active
-                          ? "bg-brand-soft text-brand-ink"
-                          : "text-ink-secondary hover:bg-surface-muted hover:text-ink",
+                          ? "bg-sidebar-active text-sidebar-ink before:absolute before:left-0 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-[var(--accent)] before:content-['']"
+                          : "text-sidebar-muted hover:bg-sidebar-active/60 hover:text-sidebar-ink",
                       )}
                     >
                       <Icon
                         className={cn(
                           "h-[18px] w-[18px] shrink-0",
-                          active ? "text-brand-ink" : "text-ink-muted group-hover:text-ink",
+                          active
+                            ? "text-sidebar-ink"
+                            : "text-sidebar-muted group-hover:text-sidebar-ink",
                         )}
                         aria-hidden
                       />
@@ -206,7 +208,7 @@ function SidebarContent({
         ))}
       </nav>
 
-      <div className="shrink-0 border-t border-line p-3 lg:hidden">
+      <div className="shrink-0 border-t border-sidebar-line p-3 lg:hidden">
         <ThemeToggle className="w-full justify-center" />
       </div>
     </>
@@ -270,7 +272,7 @@ function UserMenu({ user }: { user: ShellUser }) {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+6px)] w-64 overflow-hidden rounded-xl border border-line bg-surface shadow-[var(--shadow-pop)]"
+          className="absolute right-0 top-[calc(100%+6px)] w-64 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-pop)]"
         >
           <div className="border-b border-line px-4 py-3">
             <p className="truncate text-sm font-semibold text-ink">

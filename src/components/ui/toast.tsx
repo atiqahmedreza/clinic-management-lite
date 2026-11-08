@@ -92,23 +92,19 @@ const variantStyles: Record<
 > = {
   success: {
     icon: CheckCircle2,
-    className:
-      "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-400/30 dark:bg-[#10231c] dark:text-emerald-200",
+    className: "border-success/25 border-l-4 border-l-success bg-success-soft text-success-ink",
   },
   error: {
     icon: XCircle,
-    className:
-      "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-400/30 dark:bg-[#2a1517] dark:text-rose-200",
+    className: "border-danger/25 border-l-4 border-l-danger bg-danger-soft text-danger-ink",
   },
   warning: {
     icon: AlertTriangle,
-    className:
-      "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-400/30 dark:bg-[#2a2010] dark:text-amber-200",
+    className: "border-warning/30 border-l-4 border-l-warning bg-warning-soft text-warning-ink",
   },
   info: {
     icon: Info,
-    className:
-      "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-400/30 dark:bg-[#101f2b] dark:text-sky-200",
+    className: "border-info/25 border-l-4 border-l-info bg-info-soft text-info-ink",
   },
 };
 
@@ -126,7 +122,7 @@ function ToastCard({
     <div
       role={toast.variant === "error" ? "alert" : "status"}
       className={cn(
-        "pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-[var(--shadow-pop)]",
+        "pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-[var(--radius-card)] border px-4 py-3 text-sm shadow-[var(--shadow-pop)]",
         style.className,
       )}
     >

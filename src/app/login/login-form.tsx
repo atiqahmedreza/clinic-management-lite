@@ -128,7 +128,7 @@ export function DemoAccounts({
   };
 
   return (
-    <div className="mt-7 rounded-xl border border-line bg-surface-muted/70 p-4">
+    <div className="mt-7 rounded-[var(--radius-card)] border border-line bg-surface-muted/70 p-4">
       <p className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted">
         Demo accounts
       </p>

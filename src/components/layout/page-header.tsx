@@ -47,11 +47,12 @@ export function PageHeader({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+          <h1 className="display text-[1.5rem] text-ink sm:text-[1.75rem]">
             {title}
           </h1>
+          <span className="title-rule mt-2.5" aria-hidden />
           {description ? (
-            <p className="mt-1 text-sm text-ink-muted">{description}</p>
+            <p className="mt-2.5 text-sm text-ink-muted">{description}</p>
           ) : null}
         </div>
         {actions ? (

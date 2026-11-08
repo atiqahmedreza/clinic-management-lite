@@ -54,19 +54,19 @@ const alertStyles: Record<
   { wrap: string; icon: React.ElementType }
 > = {
   info: {
-    wrap: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-400/25 dark:bg-sky-500/10 dark:text-sky-200",
+    wrap: "border-info/25 bg-info-soft text-info-ink",
     icon: Info,
   },
   success: {
-    wrap: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-400/25 dark:bg-emerald-500/10 dark:text-emerald-200",
+    wrap: "border-success/25 bg-success-soft text-success-ink",
     icon: CheckCircle2,
   },
   warning: {
-    wrap: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-400/25 dark:bg-amber-500/10 dark:text-amber-200",
+    wrap: "border-warning/30 bg-warning-soft text-warning-ink",
     icon: AlertTriangle,
   },
   error: {
-    wrap: "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-400/25 dark:bg-rose-500/10 dark:text-rose-200",
+    wrap: "border-danger/25 bg-danger-soft text-danger-ink",
     icon: XCircle,
   },
 };
@@ -107,7 +107,7 @@ export function Alert({
 // ---------------------------------------------------------------------------
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("skeleton rounded-md", className)} aria-hidden />;
+  return <div className={cn("skeleton rounded-[var(--radius-control)]", className)} aria-hidden />;
 }
 
 export function SkeletonText({

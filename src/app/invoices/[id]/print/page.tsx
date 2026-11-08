@@ -42,7 +42,7 @@ export default async function InvoicePrintPage({
       {/* ---- letterhead ---- */}
       <header className="flex items-start justify-between gap-6 border-b-2 border-black pb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">{CLINIC.name}</h1>
+          <h1 className="display text-[1.5rem] tracking-tight">{CLINIC.name}</h1>
           <p className="mt-0.5 text-[12px]">{CLINIC.tagline}</p>
           <p className="mt-2 text-[12px]">
             {CLINIC.addressLine1}
@@ -54,7 +54,7 @@ export default async function InvoicePrintPage({
           <p className="mt-1 text-[11px]">Reg. {CLINIC.registration}</p>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold uppercase tracking-wide">
+          <p className="display text-[1.125rem] uppercase tracking-wide">
             {invoice.status === "CANCELLED" ? "Cancelled invoice" : "Invoice"}
           </p>
           <p className="mt-1 font-mono text-base font-semibold">
@@ -129,11 +129,11 @@ export default async function InvoicePrintPage({
         </thead>
         <tbody>
           {invoice.items.map((item) => (
-            <tr key={item.id} className="border-b border-neutral-300">
+            <tr key={item.id} className="border-b border-[#d6cec1]">
               <td className="py-2">
                 {item.description}
                 {item.service ? (
-                  <span className="ml-2 font-mono text-[11px] text-neutral-600">
+                  <span className="ml-2 font-mono text-[11px] text-[#5a534b]">
                     {item.service.code}
                   </span>
                 ) : null}
@@ -183,7 +183,7 @@ export default async function InvoicePrintPage({
           <table className="mt-2 w-full border-collapse text-[12px]">
             <tbody>
               {invoice.payments.map((payment) => (
-                <tr key={payment.id} className="border-b border-neutral-300">
+                <tr key={payment.id} className="border-b border-[#d6cec1]">
                   <td className="py-1.5">{formatDateTime(payment.paidAt)}</td>
                   <td className="py-1.5">
                     {PAYMENT_METHOD_META[payment.method]}
@@ -207,7 +207,7 @@ export default async function InvoicePrintPage({
       ) : null}
 
       {/* ---- footer ---- */}
-      <footer className="mt-10 flex items-end justify-between gap-8 border-t border-neutral-300 pt-4 text-[11px]">
+      <footer className="mt-10 flex items-end justify-between gap-8 border-t border-[#d6cec1] pt-4 text-[11px]">
         <p>
           This is a computer-generated invoice.
           {invoice.createdBy ? ` Raised by ${invoice.createdBy.name}.` : ""}
@@ -221,7 +221,7 @@ export default async function InvoicePrintPage({
         </p>
       </footer>
 
-      <p className="mt-8 text-center text-[12px] text-neutral-600 print:hidden">
+      <p className="mt-8 text-center text-[12px] text-[#5a534b] print:hidden">
         The print dialog opens automatically. Choose &ldquo;Save as PDF&rdquo;
         to keep a copy.
       </p>

@@ -298,7 +298,7 @@ export function InvoiceBuilder({
                         type="button"
                         onClick={() => remove(item.key)}
                         aria-label={`Remove line ${index + 1}`}
-                        className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface hover:text-[var(--danger)]"
+                        className="rounded-[var(--radius-control)] p-1.5 text-ink-muted transition-colors hover:bg-surface hover:text-[var(--danger)]"
                       >
                         <Trash2 className="h-4 w-4" aria-hidden />
                       </button>

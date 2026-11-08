@@ -293,9 +293,9 @@ export function AppointmentForm({
                       onClick={() => setTime(slot.time)}
                       aria-pressed={active}
                       className={cn(
-                        "tabular rounded-lg border px-2 py-2 text-sm font-medium transition-colors",
+                        "tabular rounded-[var(--radius-control)] border px-2 py-2 text-sm font-medium transition-colors duration-150",
                         active
-                          ? "border-[var(--brand)] bg-[var(--brand)] text-white dark:text-[var(--ink-inverse)]"
+                          ? "border-[var(--brand)] bg-[var(--brand)] text-[var(--ink-inverse)]"
                           : slot.available
                             ? "border-line-strong text-ink hover:border-[var(--brand)] hover:bg-brand-soft"
                             : "cursor-not-allowed border-line bg-surface-muted text-ink-muted line-through",

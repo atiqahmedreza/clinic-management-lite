@@ -4,7 +4,8 @@ import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const controlBase =
-  "w-full rounded-lg border bg-surface px-3 text-[15px] text-ink transition-colors " +
+  "w-full rounded-[var(--radius-control)] border bg-surface px-3 text-[15px] text-ink " +
+  "transition-colors duration-150 " +
   "border-line-strong placeholder:text-ink-muted " +
   "focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-ring)] " +
   "disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-ink-muted " +
@@ -151,7 +152,7 @@ export function Checkbox({
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-start gap-2.5 rounded-lg border border-line p-3 transition-colors hover:bg-surface-muted",
+        "flex cursor-pointer items-start gap-2.5 rounded-[var(--radius-control)] border border-line p-3 transition-colors duration-150 hover:bg-surface-muted",
         className,
       )}
     >

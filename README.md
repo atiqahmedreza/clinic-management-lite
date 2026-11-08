@@ -209,7 +209,7 @@ Sample output:
 | Validation | **Zod** | One schema validates the form and the server action |
 | Auth | **jose** (JWT) + **bcryptjs** | httpOnly cookie session; verification runs on the Edge, so middleware needs no database |
 | Icons | **lucide-react** | |
-| Charts | Hand-written inline SVG | No chart dependency; palette validated for colour-vision deficiency in both themes |
+| Charts | Hand-written inline SVG | No chart dependency; the series palette is checked by `scripts/validate_palette.js` (CIEDE2000 under protanopia, deuteranopia and tritanopia) in both themes |
 
 Money is stored as `NUMERIC(12,2)`, never as a float. Prisma `Decimal` values
 are converted to plain numbers at the service boundary
@@ -334,6 +334,7 @@ Open <http://localhost:3000>.
 | `npm run typecheck` | TypeScript, no emit |
 | `npm run lint` | ESLint |
 | `npm run verify` | Walks the whole workflow against the live database and asserts every business rule (see below) |
+| `npm run validate:palette` | Checks a chart palette for contrast and colour-vision-deficiency separation |
 | `npm run db:migrate` | Create and apply a migration |
 | `npm run db:deploy` | Apply migrations (production) |
 | `npm run db:seed` | Reset demo data |
