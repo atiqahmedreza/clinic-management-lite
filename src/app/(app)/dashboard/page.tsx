@@ -1,9 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  Activity,
   Wallet,
-  CalendarCheck2,
   CalendarClock,
   ClipboardList,
   ReceiptText,
@@ -23,7 +21,7 @@ import {
 } from "@/lib/utils";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import {
   AppointmentStatusBadge,
   AppointmentTypeBadge,
@@ -31,10 +29,6 @@ import {
 } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/states";
 import { buttonClasses } from "@/components/ui/button";
-import {
-  RevenueTrendChart,
-  VisitsBarChart,
-} from "@/components/ui/charts";
 import { AppointmentStatusActions } from "@/components/appointments/status-actions";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -109,38 +103,6 @@ export default async function DashboardPage() {
           href={canBill ? "/invoices?status=UNPAID" : undefined}
           accent={kpi.outstandingTotal > 0 ? "amber" : "brand"}
         />
-      </section>
-
-      {/* ---------------- charts ---------------- */}
-      <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <Card>
-          <CardHeader
-            title="Payments collected"
-            description="Last 14 days, from recorded payments"
-            icon={<Activity className="h-4 w-4" aria-hidden />}
-            action={
-              <span className="tabular text-sm font-semibold text-ink">
-                {formatCurrency(
-                  data.trend.reduce((sum, day) => sum + day.revenue, 0),
-                )}
-              </span>
-            }
-          />
-          <CardBody>
-            <RevenueTrendChart data={data.trend} />
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader
-            title="Visits per day"
-            description="Last 14 days, by outcome"
-            icon={<CalendarCheck2 className="h-4 w-4" aria-hidden />}
-          />
-          <CardBody>
-            <VisitsBarChart data={data.trend} />
-          </CardBody>
-        </Card>
       </section>
 
       {/* ---------------- today's queue ---------------- */}

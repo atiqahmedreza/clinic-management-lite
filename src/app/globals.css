@@ -73,25 +73,6 @@
   --sidebar-active: #2b5649;
   --sidebar-border: rgba(241, 234, 223, 0.12);
 
-  /* Data-visualisation palette.
-     Slots 1-3 are the chart series and are validated for colour-vision
-     deficiency (min ΔE2000 20.4 across normal, protan, deutan and tritan):
-       node scripts/validate_palette.js "#2f5d50,#a9872b,#7a9183" \
-         --surface "#ffffff" --min-de 18
-     Slots 4-6 extend the ramp for the six-state queue bar, which also
-     carries a text label and count per segment. */
-  --viz-1: #2f5d50;
-  --viz-2: #a9872b;
-  --viz-3: #7a9183;
-  --viz-4: #b7791f;
-  --viz-5: #b3402f;
-  --viz-6: #8a8178;
-  --viz-grid: #ede6da;
-  --viz-axis: #d5cbba;
-  --viz-label: #6b635b;
-  --viz-area-from: rgba(47, 93, 80, 0.18);
-  --viz-area-to: rgba(47, 93, 80, 0);
-
 }
 
 [data-theme="dark"] {
@@ -147,21 +128,6 @@
   --sidebar-muted: #9bb0a6;
   --sidebar-active: #244439;
   --sidebar-border: rgba(236, 228, 217, 0.1);
-
-  /* Dark steps, validated on the dark surface (min ΔE2000 21.6):
-       node scripts/validate_palette.js "#6fbf9f,#a9872b,#5c7265" \
-         --surface "#1e1a17" --mode dark --min-de 18 */
-  --viz-1: #6fbf9f;
-  --viz-2: #a9872b;
-  --viz-3: #5c7265;
-  --viz-4: #e0b457;
-  --viz-5: #e8897a;
-  --viz-6: #a89f94;
-  --viz-grid: #2a241f;
-  --viz-axis: #463e36;
-  --viz-label: #a89f94;
-  --viz-area-from: rgba(111, 191, 159, 0.22);
-  --viz-area-to: rgba(111, 191, 159, 0);
 
 }
 

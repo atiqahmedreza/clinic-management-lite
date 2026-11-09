@@ -121,11 +121,8 @@ server rejects one anyway if it is forged.
 
 **Dashboard**
 - Appointments today, consultations today, collected today, outstanding dues — all aggregated live
-- 14-day payments trend (area chart with crosshair tooltip)
-- 14-day visits per day, split by outcome (stacked bars)
-- Today's queue status as a part-to-whole bar
 - Today's schedule with the workflow action buttons inline
-- "Ready to bill" queue, follow-ups due, busiest doctors this month
+- "Ready to bill" queue and follow-ups due
 - Doctors see their own clinic; reception and admin see the whole day
 
 **Throughout**
@@ -133,7 +130,6 @@ server rejects one anyway if it is forged.
 - Light / dark / system theme, resolved before first paint
 - Real tables on desktop, stacked cards on mobile — not a sideways-scrolling grid
 - Keyboard-navigable combobox, focus-visible rings, ARIA live regions for toasts
-- Charts ship a screen-reader data table alongside the visual
 
 ## Business rules enforced
 
@@ -209,7 +205,6 @@ Sample output:
 | Validation | **Zod** | One schema validates the form and the server action |
 | Auth | **jose** (JWT) + **bcryptjs** | httpOnly cookie session; verification runs on the Edge, so middleware needs no database |
 | Icons | **lucide-react** | |
-| Charts | Hand-written inline SVG | No chart dependency; the series palette is checked by `scripts/validate_palette.js` (CIEDE2000 under protanopia, deuteranopia and tritanopia) in both themes |
 
 Money is stored as `NUMERIC(12,2)`, never as a float. Prisma `Decimal` values
 are converted to plain numbers at the service boundary
@@ -259,7 +254,7 @@ src/
   actions/               server actions — the only write path from the UI
   components/
     ui/                  design system: button, field, card, table, badge,
-                         modal, toast, filters, pagination, charts, states
+                         modal, toast, filters, pagination, states
     layout/              app shell, sidebar, page header
     patients/ appointments/ consultations/ billing/ staff/
   lib/
@@ -334,7 +329,6 @@ Open <http://localhost:3000>.
 | `npm run typecheck` | TypeScript, no emit |
 | `npm run lint` | ESLint |
 | `npm run verify` | Walks the whole workflow against the live database and asserts every business rule (see below) |
-| `npm run validate:palette` | Checks a chart palette for contrast and colour-vision-deficiency separation |
 | `npm run db:migrate` | Create and apply a migration |
 | `npm run db:deploy` | Apply migrations (production) |
 | `npm run db:seed` | Reset demo data |

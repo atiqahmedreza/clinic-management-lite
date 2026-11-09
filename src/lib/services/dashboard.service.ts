@@ -28,7 +28,6 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
   const monthStart = startOfMonth(now);
   const prevMonthStart = startOfMonth(addDays(monthStart, -1));
   const prevMonthEnd = endOfDay(addDays(monthStart, -1));
-  const trendStart = startOfDay(addDays(now, -13));
 
   const doctorScope = options.doctorId ? { doctorId: options.doctorId } : {};
 
@@ -44,10 +43,7 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
     paymentsThisMonth,
     paymentsPrevMonth,
     outstanding,
-    recentPayments,
-    recentAppointments,
     upcomingFollowUps,
-    topDoctors,
     unbilledVisits,
   ] = await Promise.all([
     prisma.appointment.findMany({
@@ -124,16 +120,6 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
       _count: { _all: true },
     }),
 
-    prisma.payment.findMany({
-      where: { paidAt: { gte: trendStart } },
-      select: { paidAt: true, amount: true },
-    }),
-
-    prisma.appointment.findMany({
-      where: { scheduledAt: { gte: trendStart, lte: todayEnd }, ...doctorScope },
-      select: { scheduledAt: true, status: true },
-    }),
-
     prisma.consultation.findMany({
       where: {
         followUpDate: { gte: todayStart, lte: endOfDay(addDays(now, 14)) },
@@ -150,14 +136,6 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
         },
         doctor: { select: { user: { select: { name: true } } } },
       },
-    }),
-
-    prisma.consultation.groupBy({
-      by: ["doctorId"],
-      where: { createdAt: { gte: monthStart } },
-      _count: { _all: true },
-      orderBy: { _count: { doctorId: "desc" } },
-      take: 5,
     }),
 
     prisma.consultation.findMany({
@@ -190,51 +168,6 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
     toNumber(outstanding._sum.totalAmount) - toNumber(outstanding._sum.paidAmount),
   );
 
-  const doctorNames = topDoctors.length
-    ? await prisma.doctor.findMany({
-        where: { id: { in: topDoctors.map((row) => row.doctorId) } },
-        select: {
-          id: true,
-          specialization: true,
-          user: { select: { name: true } },
-        },
-      })
-    : [];
-  const doctorById = new Map(doctorNames.map((d) => [d.id, d]));
-
-  // 14-day trend buckets
-  const days: {
-    date: Date;
-    key: string;
-    label: string;
-    revenue: number;
-    appointments: number;
-    completed: number;
-  }[] = [];
-  for (let i = 13; i >= 0; i -= 1) {
-    const date = startOfDay(addDays(now, -i));
-    days.push({
-      date,
-      key: dayKey(date),
-      label: date.toLocaleDateString("en-US", { day: "numeric", month: "short" }),
-      revenue: 0,
-      appointments: 0,
-      completed: 0,
-    });
-  }
-  const byKey = new Map(days.map((day) => [day.key, day]));
-
-  for (const payment of recentPayments) {
-    const bucket = byKey.get(dayKey(payment.paidAt));
-    if (bucket) bucket.revenue = round2(bucket.revenue + toNumber(payment.amount));
-  }
-  for (const appointment of recentAppointments) {
-    const bucket = byKey.get(dayKey(appointment.scheduledAt));
-    if (!bucket) continue;
-    bucket.appointments += 1;
-    if (appointment.status === "COMPLETED") bucket.completed += 1;
-  }
-
   const waiting = todaysAppointments.filter(
     (item) => item.status === "CHECKED_IN",
   );
@@ -264,29 +197,10 @@ export async function getDashboardData(options: { doctorId?: string } = {}) {
       outstandingTotal,
       outstandingInvoices: outstanding._count._all,
     },
-    statusBreakdown: [
-      { status: "SCHEDULED", count: statusMap.SCHEDULED ?? 0 },
-      { status: "CHECKED_IN", count: statusMap.CHECKED_IN ?? 0 },
-      { status: "IN_CONSULTATION", count: statusMap.IN_CONSULTATION ?? 0 },
-      { status: "COMPLETED", count: statusMap.COMPLETED ?? 0 },
-      { status: "CANCELLED", count: statusMap.CANCELLED ?? 0 },
-      { status: "NO_SHOW", count: statusMap.NO_SHOW ?? 0 },
-    ],
-    trend: days.map(({ key: _key, date: _date, ...rest }) => rest),
     todaysAppointments,
     upcomingFollowUps,
     unbilledVisits,
-    topDoctors: topDoctors.map((row) => ({
-      doctorId: row.doctorId,
-      name: doctorById.get(row.doctorId)?.user.name ?? "Unknown",
-      specialization: doctorById.get(row.doctorId)?.specialization ?? "",
-      visits: row._count._all,
-    })),
   });
 }
 
 export type DashboardData = Awaited<ReturnType<typeof getDashboardData>>;
-
-function dayKey(date: Date): string {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-}
